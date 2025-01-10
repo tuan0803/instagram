@@ -1,21 +1,21 @@
 module.exports = (sequelize, DataTypes) => {
-    const Notification = sequelize.define('Notification', {
-      notification_id: {
+    const Media = sequelize.define('Media', {
+      media_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      user_id: {
+      post_id: {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      content: {
-        type: DataTypes.TEXT,
+      media_url: {
+        type: DataTypes.STRING(255),
         allowNull: false
       },
-      status: {
-        type: DataTypes.ENUM('unread', 'read'),
-        defaultValue: 'unread'
+      media_type: {
+        type: DataTypes.ENUM('image', 'video'),
+        allowNull: false
       },
       created_at: {
         type: DataTypes.TIMESTAMP
@@ -24,14 +24,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TIMESTAMP
       }
     }, {
-      tableName: 'notification',
+      tableName: 'media',
       timestamps: false
     });
   
-    Notification.associate = (models) => {
-      Notification.belongsTo(models.User, { foreignKey: 'user_id' });
+    Media.associate = (models) => {
+      Media.belongsTo(models.Post, { foreignKey: 'post_id' });
     };
   
-    return Notification;
+    return Media;
   };
-  
