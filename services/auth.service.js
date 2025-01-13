@@ -1,35 +1,41 @@
-<<<<<<< HEAD
 const User = require('../models/User');
-const userValidator = require('../validation/user.validator'); 
+const { generateToken } = require('../utils/encryption');
 
 
 async function create(user) {
     try{
-        const { error } = await userValidator.create(user);
-        if(error) return { status: 400, message: error.details[0].message };
         const { username, full_name, email, password } = user;
 
         const result = await User.create({ username, full_name, email, password });
-        return res.status(201).json({ success: true, message: 'User created successfully', data: result });
+        return result;
     } catch(err){
-        return res.status(500).json({ success: false, message: 'Internal Server Error', data: err });
+        console.log(err);
+        throw new Error('Error creating user');
     }
 } 
-=======
-const bcryot = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const userModel = require('../models/User');
 
-async function create(user) {
+async function login(user) {
     try {
-        const { username, email, full_name, password } = user;
-        const hashedPassword = await bcryot.hash(password, 10);
-        return result = await userModel.create({ username, email, full_name, password: hashedPassword });
+        const { username, password } = user;
+        const acc = await User.findOne({ where: { username } });
+        if (!acc) return acc;
+        const isValid = await acc.comparePassword(password);
+        if(!isValid) return isValid;
+        const token = generateToken(acc);
+        return token;
     } catch (error) {
-        new Error (error.message);
+        console.log(error)
+        throw new Error('Internal Server Error');
     }
 }
->>>>>>> main
 
-
-module.exports = { create }
+async function logout(token) {
+    try {
+        const expireDate = new Date();
+        return true;
+    } catch (error) {
+        console.log(error)
+        throw new Error('Internal Server Error'); 
+    }
+}
+module.exports = { create, login, logout }
