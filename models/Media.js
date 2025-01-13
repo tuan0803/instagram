@@ -1,20 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
-    const Comment = sequelize.define('Comment', {
-      comment_id: {
+    const Media = sequelize.define('Media', {
+      media_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
-      },
-      user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
       },
       post_id: {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      content: {
-        type: DataTypes.TEXT,
+      media_url: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      media_type: {
+        type: DataTypes.ENUM('image', 'video'),
         allowNull: false
       },
       created_at: {
@@ -24,15 +24,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TIMESTAMP
       }
     }, {
-      tableName: 'comment',
+      tableName: 'media',
       timestamps: false
     });
   
-    Comment.associate = (models) => {
-      Comment.belongsTo(models.User, { foreignKey: 'user_id' });
-      Comment.belongsTo(models.Post, { foreignKey: 'post_id' });
+    Media.associate = (models) => {
+      Media.belongsTo(models.Post, { foreignKey: 'post_id' });
     };
   
-    return Comment;
+    return Media;
   };
-  
