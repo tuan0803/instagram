@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const userValidation = Joi.object({
+const registerValidation = Joi.object({
     username: Joi.string()
         .min(3)
         .max(50)
@@ -59,7 +59,7 @@ const userValidation = Joi.object({
 });
 
 const validateUser = (user) => {
-    return userValidation.validate(user, { abortEarly: false }); 
+    return registerValidation.validate(user, { abortEarly: false }); 
   };
 
 module.exports = validateUser;

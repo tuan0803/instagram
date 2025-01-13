@@ -1,4 +1,5 @@
 const sequelize = require('../config/db');
+const { DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 
 const User = sequelize.define('User', {
@@ -63,7 +64,7 @@ const User = sequelize.define('User', {
     allowNull: false,
     defaultValue: false
   },
-  is_verified: {
+  is_active: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: true
@@ -80,7 +81,7 @@ const User = sequelize.define('User', {
     field: 'updated_at',
   },
 }, {
-  tableName: 'users',
+  tableName: 'user',
   timestamps: true,
   createdAt: 'created_at',
   updatedAt: 'updated_at',
@@ -99,5 +100,9 @@ const User = sequelize.define('User', {
         },
     },
 });
+
+User.prototype.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 module.exports = User;
