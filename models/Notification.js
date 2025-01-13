@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../config/db');
+const User = require('./User'); 
+const Post = require('./Post'); 
 
 const Notification = db.define('Notification', {
   notification_id: {
@@ -43,5 +45,6 @@ const Notification = db.define('Notification', {
   tableName: 'notification',
   timestamps: false,
 });
-
+Notification.belongsTo(User, { as: 'actor', foreignKey: 'actor_id' });
+Notification.belongsTo(Post, { as: 'post', foreignKey: 'post_id' });
 module.exports = Notification;

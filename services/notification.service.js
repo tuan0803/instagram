@@ -21,13 +21,25 @@ class NotificationService {
   
   async getNotifications(user_id) {
     try {
-        const notification = await Notification.findAll({
-            where: { user_id: user_id },
-            order: [['create_at', 'DESC']],
-        });
-        return notification;
+      const notifications = await Notification.findAll({
+        where: { user_id },
+        include: [
+          {
+            model: User, 
+            as: 'actor', 
+            attributes: ['user_id', 'username', 'profile_picture'], 
+          },
+          {
+            model: Post, 
+            as: 'post', 
+            attributes: ['post_id'], 
+          },
+        ],
+        order: [['created_at', 'DESC']],
+      });
+      return notifications;
     } catch (error) {
-            throw new Error('Cant get Notification'+ error.message);
+      throw new Error('Error retrieving notifications: ' + error.message);
     }
   }
 
